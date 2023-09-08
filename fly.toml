@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for glossary-bot on 2023-09-07T08:53:33-04:00
+# fly.toml app configuration file generated for glossary-bot on 2023-09-08T04:01:01Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,7 +7,10 @@ app = "glossary-bot"
 primary_region = "iad"
 
 [build]
-  builder = "paketobuildpacks/builder:base"
+  builder = "paketobuildpacks/builder:full"
+  builtin = "python"
+  [build.settings]
+    pythonbase = "3.8-slim-buster"
 
 [env]
   PORT = "8080"
