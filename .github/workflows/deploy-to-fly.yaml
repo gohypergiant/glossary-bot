@@ -1,0 +1,69 @@
+name: Deploy Glossary-Bot to Fly
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'App name'
+        type: string
+        required: true
+      environment:
+        description: 'Target environment. Defaults to hg-sandbox.'
+        type: string
+        required: false
+        default: 'hg-sandbox'
+    secrets:
+      fly_access_token:
+        description: 'Fly access token'
+        required: true
+
+concurrency:
+  group: ${{ inputs.app_name }} # Only one deploy at a time per app
+  cancel-in-progress: true # Cancel any previous deploys and deploy the latest
+
+jobs:
+  deploy-glossary-bot:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'hg-sandbox'}}
+    env:
+      FLY_API_TOKEN: ${{ secrets.fly_access_token }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+
+      - name: Setup flyctl
+        id: setup-flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # flyctl launch with these arguments has the same effect as running flyctl deploy --remote-only --config fly.toml --name ${{ steps.set_app_name.outputs.app_name }}
+      # therefore, we just run flyctl launch instead of flyctl deploy as a sort of upsert operation.
+      - name: deploy glossary-box
+        id: flyctl-launch
+        run: |
+          ENV_PARAMS=$(printf "%s" "$ENV_CONTENT" | sed 's/$/\\n/' | tr -d '\n')
+          flyctl launch \
+          --auto-confirm \
+          --copy-config \
+          --ha=false \
+          --name ${{ inputs.app_name }} \
+          --now \
+          --org=${{ vars.FLY_ORG }} \
+          --region=${{ vars.FLY_REGION }} \
+          --remote-only \
+          --reuse-app \
+          $(printf "%s" "$ENV_PARAMS" | sed 's/^/-e /') \
+          -e FLY_APP_NAME=${{ inputs.app_name }} \
+          -e SLACK_TOKEN=${{ secrets.GLOSS_BOT_SLACK_TOKEN }} \
+          -e SLACK_WEBHOOK_URL=${{ vars.SLACK_WEBHOOK_URL }} \
+  
+  update-pr:
+    runs-on: ubuntu-latest
+    needs: [ deploy-glossary-bot ]
+    steps:
+      - name: Notify PR of successful update
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            :rocket: Deployed to Fly!
+            :link: https://${{ inputs.app_name }}.fly.dev
