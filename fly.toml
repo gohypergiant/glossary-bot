@@ -8,9 +8,6 @@ primary_region = "iad"
 
 [build]
   builder = "paketobuildpacks/builder:full"
-  builtin = "python"
-  [build.settings]
-    pythonbase = "3.8-slim-buster"
 
 [env]
   PORT = "8080"
