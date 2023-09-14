@@ -12,19 +12,16 @@ on:
         required: false
 
 jobs:
-  set-fly-app-name:
-    uses: ./.github/workflows/set-fly-app-name.yaml
-    with:
-      ref: ${{ inputs.branch || github.head_ref || github.ref }} # Use the input if it's there, otherwise use the head ref, otherwise use the ref
-
   dev:
     concurrency: hg-sandbox
     if: github.ref == 'refs/heads/develop'
     uses: ./.github/workflows/deploy-to-fly.yaml
     secrets:
       fly_access_token: ${{ secrets.FLY_API_TOKEN }}
+      gloss_bot_slack_token: ${{ secrets.GLOSS_BOT_SLACK_TOKEN }}
+      slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
-      app_name: glossary-bot-develop
+      app_name: hg-ops-glossarybot-develop
       environment: 'hg-sandbox'
 
   stable:
@@ -33,6 +30,8 @@ jobs:
     uses: ./.github/workflows/deploy-to-fly.yaml
     secrets:
       fly_access_token: ${{ secrets.FLY_API_TOKEN }}
+      gloss_bot_slack_token: ${{ secrets.GLOSS_BOT_SLACK_TOKEN }}
+      slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
-      app_name: glossary-bot-stable
+      app_name: hg-ops-glossarybot-stable
       environment: 'Hypergiant'
