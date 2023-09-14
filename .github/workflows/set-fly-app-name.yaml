@@ -11,7 +11,7 @@ on:
         type: string
         description: "The prefix to add to the name"
         required: false
-        default: "hg-cc-eph-"
+        default: "glossary-bot-"
     outputs:
       name:
         description: "The rendered name of the app"
