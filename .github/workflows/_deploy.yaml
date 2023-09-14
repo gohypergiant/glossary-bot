@@ -12,11 +12,6 @@ on:
         required: false
 
 jobs:
-  set-fly-app-name:
-    uses: ./.github/workflows/set-fly-app-name.yaml
-    with:
-      ref: ${{ inputs.branch || github.head_ref || github.ref }} # Use the input if it's there, otherwise use the head ref, otherwise use the ref
-
   dev:
     concurrency: hg-sandbox
     if: github.ref == 'refs/heads/develop'
