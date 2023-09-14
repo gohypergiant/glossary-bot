@@ -55,7 +55,7 @@ jobs:
           $(printf "%s" "$ENV_PARAMS" | sed 's/^/-e /') \
           -e FLY_APP_NAME=${{ inputs.app_name }} \
           -e SLACK_TOKEN=${{ secrets.GLOSS_BOT_SLACK_TOKEN }} \
-          -e SLACK_WEBHOOK_URL=${{ vars.SLACK_WEBHOOK_URL }} \
+          -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }} \
   
   update-pr:
     runs-on: ubuntu-latest
