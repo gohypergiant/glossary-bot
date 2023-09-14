@@ -16,6 +16,12 @@ on:
       fly_access_token:
         description: 'Fly access token'
         required: true
+      gloss_bot_slack_token:
+        description: 'Gloss Bot Slack Token'
+        required: true
+      slack_webhook_url:
+        description: 'Slack Webhook URL'
+        required: true
 
 concurrency:
   group: ${{ inputs.app_name }} # Only one deploy at a time per app
@@ -54,8 +60,8 @@ jobs:
           --reuse-app \
           $(printf "%s" "$ENV_PARAMS" | sed 's/^/-e /') \
           -e FLY_APP_NAME=${{ inputs.app_name }} \
-          -e SLACK_TOKEN=${{ secrets.GLOSS_BOT_SLACK_TOKEN }} \
-          -e SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }} \
+          -e SLACK_TOKEN=${{ secrets.gloss_bot_slack_token }} \
+          -e SLACK_WEBHOOK_URL=${{ secrets.slack_webhook_url }} \
   
   update-pr:
     runs-on: ubuntu-latest
