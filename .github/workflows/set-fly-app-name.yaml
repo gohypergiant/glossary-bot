@@ -1,0 +1,29 @@
+name: Set Fly.io App Name
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        description: "The ref to format"
+        required: true
+      prefix:
+        type: string
+        description: "The prefix to add to the name"
+        required: false
+        default: "glossary-bot-"
+    outputs:
+      name:
+        description: "The rendered name of the app"
+        value: ${{ jobs.set_name.outputs.name  }}
+
+jobs:
+  set_name:
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.set_name.outputs.name }}
+
+    steps:
+      - id: set_name
+        run: |
+          echo "name=$(echo "${{ inputs.prefix }}${{ inputs.ref }}" | tr '/\' '-' | tr -C '[:lower:][:digit:]' '-' | tr '/\' '-' | sed 's/-*$//g')" >> $GITHUB_OUTPUT
