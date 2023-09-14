@@ -16,6 +16,12 @@ on:
       fly_access_token:
         description: 'Fly access token'
         required: true
+      gloss_bot_slack_token:
+        description: 'Gloss Bot Slack Token'
+        required: true
+      slack_webhook_url:
+        description: 'Slack Webhook URL'
+        required: true
 
 concurrency:
   group: ${{ inputs.app_name }} # Only one deploy at a time per app
