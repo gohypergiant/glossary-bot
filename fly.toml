@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for glossary-bot on 2023-09-08T04:01:01Z
+# fly.toml app configuration file generated for glossary-bot-develop on 2023-09-08T11:11:02-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -10,12 +10,15 @@ primary_region = "iad"
   builder = "paketobuildpacks/builder:full"
 
 [env]
+  FLY_APP_NAME = "glossary-bot-develop"
   PORT = "8080"
+  SLACK_TOKEN = "SQqEHwCpT1daaTM7HunaWHIR"
+  SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = false
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ["app"]
