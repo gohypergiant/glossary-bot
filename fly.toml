@@ -12,8 +12,6 @@ primary_region = "iad"
 [env]
   FLY_APP_NAME = "glossary-bot-develop"
   PORT = "8080"
-  SLACK_TOKEN = "SQqEHwCpT1daaTM7HunaWHIR"
-  SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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"
 
 [http_service]
   internal_port = 8080
